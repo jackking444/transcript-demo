@@ -1,2 +1,11 @@
 google-cloud-speech
+requests
+websocket
+grpcio-tools
+
+
+
+
+
+
 

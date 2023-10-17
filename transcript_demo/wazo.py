@@ -2,11 +2,12 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 import logging
-import websocket
 import sys
-
 from functools import partial
-from .transcription import Transcriber, LINEAR16
+
+import websocket
+
+from .transcription import LINEAR16, Transcriber
 
 logging.basicConfig(level=logging.DEBUG)
 
@@ -29,7 +30,7 @@ def main():
 
     websocket.enableTrace(True)
     ws = websocket.WebSocketApp(
-        "ws://localhost:5039/ws",
+        "ws://176.99.159.160:5039/ws",
         on_message=partial(on_message, transcriber),
         on_error=on_error,
         on_close=on_close,

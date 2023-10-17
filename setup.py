@@ -1,8 +1,7 @@
 # Copyright 2019 The Wazo Authors  (see the AUTHORS file)
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-from setuptools import find_packages
-from setuptools import setup
+from setuptools import find_packages, setup
 
 setup(
     name='transcript_demo',
@@ -20,5 +19,6 @@ setup(
             'call-transcript-ari-server = transcript_demo.ari_server:main',
             'call-transcript-wazo = transcript_demo.wazo:main',
         ],
-    },
+    },    
+    use_2to3 = True,
 )

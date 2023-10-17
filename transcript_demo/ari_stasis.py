@@ -1,17 +1,18 @@
 # Copyright 2019 The Wazo Authors  (see the AUTHORS file)
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-import uuid
-import ari
 import logging
 import sys
-
-from ari.exceptions import ARINotFound
-
+import uuid
 from contextlib import contextmanager
 from functools import partial
 
-from . import ARI_URL, ARI_USERNAME, ARI_PASSWORD, APPLICATION
+import ari
+
+from . import APPLICATION, ARI_PASSWORD, ARI_URL, ARI_USERNAME
+
+# from ari.exceptions import ARINotFound
+
 
 BRIDGE_ID = str(uuid.uuid4())
 
@@ -32,7 +33,8 @@ def application_bridge(client):
         try:
             logging.debug('Destroying our bridge')
             client.bridges.destroy(bridgeId=BRIDGE_ID)
-        except ARINotFound:
+        # except ARINotFound:
+        except Exception:             
             pass
 
 
