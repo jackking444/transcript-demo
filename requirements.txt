@@ -1,2 +1,3 @@
 google-cloud-speech
-
+grpcio
+grpcio-tools
