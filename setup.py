@@ -20,5 +20,5 @@ setup(
             'call-transcript-wazo = transcript_demo.wazo:main',
         ],
     },    
-    use_2to3 = True,
+    use_2to3 = False,
 )

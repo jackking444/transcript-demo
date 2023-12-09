@@ -1,6 +1,7 @@
 google-cloud-speech
 requests
-websocket
+websocket-client
+grpcio
 grpcio-tools
 
 

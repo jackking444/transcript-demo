@@ -2,22 +2,19 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 import logging
-
+import os
 from queue import Queue
 from threading import Thread
 
+import grpc
+import pydub
 #from google.cloud import speech
 #from google.cloud.speech import types, enums
 import requests
-import grpc
-import os
-import yandex.cloud.ai.stt.v2.stt_service_pb2 as stt_service_pb2
-import yandex.cloud.ai.stt.v2.stt_service_pb2_grpc as stt_service_pb2_grpc
-
+import yandex.cloud.ai.stt.v3.stt_pb2 as stt_pb2
+import yandex.cloud.ai.stt.v3.stt_service_pb2_grpc as stt_service_pb2_grpc
 from output import Output
 
-
-_GOOGLE_SPEECH_CREDS_FILENAME = '/root/google_speech_creds.json'
 _DONE = object()
 folder_id = "b1gjmpe4cbrluouipura"
 
@@ -25,16 +22,16 @@ class Transcriber:
 
     def __init__(self, language, codec, sample_rate):
         self._specification = stt_service_pb2.RecognitionSpec(
-        language_code='ru-RU',
-        profanity_filter=True,
-        model='general',
-        partial_results=True,
-        audio_encoding='LINEAR16_PCM',
-        sample_rate_hertz=8000
+        language_code=os.getenv('language_code', 'ru-RU'),
+        profanity_filter=os.getenv('profanity_filter', False),
+        model=os.getenv('model', 'general'),
+        partial_results=os.getenv('partial_results', True),
+        audio_encoding=os.getenv('audio_encoding', 'LINEAR16_PCM'),
+        sample_rate_hertz=os.getenv('sample_rate_hertz', 8000)
         )
         self._streaming_config = stt_service_pb2.RecognitionConfig(specification=self._specification, folder_id=folder_id)
         cred = grpc.ssl_channel_credentials()
-        channel = grpc.secure_channel('stt.api.cloud.yandex.net:443', cred)
+        channel = grpc.secure_channel(os.getenv('secure_channel', 'stt.api.cloud.yandex.net:443'), cred)
         self._stub = stt_service_pb2_grpc.SttServiceStub(channel)
         #self._client = speech.SpeechClient.from_service_account_file(
         #    filename=_GOOGLE_SPEECH_CREDS_FILENAME,

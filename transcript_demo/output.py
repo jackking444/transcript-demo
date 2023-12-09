@@ -11,7 +11,7 @@ _TPL = '''\
 {}
 </body>
 '''
-_OUTPUT_DIRNAME = '/tmp/translation'
+_OUTPUT_DIRNAME=os.getenv('OUTPUT_DIRNAME', 'OUTPUT_DIRNAME')
 _OUTPUT_FILENAME = os.path.join(_OUTPUT_DIRNAME, 'index.html')
 
 

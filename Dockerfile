@@ -3,7 +3,7 @@ FROM python:2.7 as base
 ARG DEBIAN_FRONTEND="noninteractive"
 RUN apt-get update \
     && apt-get install --yes --no-install-recommends \
-         git
+         git mc
 # Keeps Python from generating .pyc files in the container
 ENV PYTHONDONTWRITEBYTECODE=1
 
@@ -16,11 +16,6 @@ RUN python -m pip install --upgrade pip && \
 python -m pip install -r requirements.txt
 
 WORKDIR /app
-COPY . /app
-
-RUN git clone https://github.com/asterisk/ari-py
-RUN cd ari-py && python setup.py install 
-
 RUN git clone https://github.com/yandex-cloud/cloudapi
 RUN cd cloudapi && \
 ls  && \
@@ -39,7 +34,15 @@ python -m grpc_tools.protoc -I . -I third_party/googleapis \
     pwd && \
     ls  output 
 
-RUN cp -R  /app/cloudapi/output /app/ranscript_demo
+RUN cp -R  /app/cloudapi/output /app/transcript_demo
+COPY . /app
+RUN python  python-client/setup.py install
+RUN git clone https://github.com/asterisk/ari-py
+RUN cd ari-py && python setup.py install 
+
+
+
+
 
 # Creates a non-root user with an explicit UID and adds permission to access the /app folder
 # For more info, please refer to https://aka.ms/vscode-docker-python-configure-containers
@@ -47,6 +50,6 @@ RUN cp -R  /app/cloudapi/output /app/ranscript_demo
 # USER appuser
 
 # During debugging, this entry point will be overridden. For more information, please refer to https://aka.ms/vscode-docker-python-debug
-RUN python setup.py install
+# RUN python setup.py install
 RUN chmod 777 docker-entrypoint.sh
 CMD ["/bin/sh"]
