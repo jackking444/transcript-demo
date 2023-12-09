@@ -6,38 +6,31 @@ import logging
 from queue import Queue
 from threading import Thread
 
-#from google.cloud import speech
-#from google.cloud.speech import types, enums
-import requests
-import grpc
-import os
-import yandex.cloud.ai.stt.v2.stt_service_pb2 as stt_service_pb2
-import yandex.cloud.ai.stt.v2.stt_service_pb2_grpc as stt_service_pb2_grpc
+from google.cloud import speech
+from google.cloud.speech_v1 import types
+#from google.cloud.speech import  enums
 
 from output import Output
 
+LINEAR16 = types.RecognitionConfig.AudioEncoding.LINEAR16
+MULAW = types.RecognitionConfig.AudioEncoding.MULAW
 
 _GOOGLE_SPEECH_CREDS_FILENAME = '/root/google_speech_creds.json'
 _DONE = object()
-folder_id = "b1gjmpe4cbrluouipura"
+
 
 class Transcriber:
 
     def __init__(self, language, codec, sample_rate):
-        self._specification = stt_service_pb2.RecognitionSpec(
-        language_code='ru-RU',
-        profanity_filter=True,
-        model='general',
-        partial_results=True,
-        audio_encoding='LINEAR16_PCM',
-        sample_rate_hertz=8000
+        self._streaming_config = types.StreamingRecognitionConfig(
+            config=types.RecognitionConfig(
+                encoding=codec,
+                sample_rate_hertz=sample_rate,
+                language_code=language,
+            ),
         )
-        self._streaming_config = stt_service_pb2.RecognitionConfig(specification=self._specification, folder_id=folder_id)
-        cred = grpc.ssl_channel_credentials()
-        channel = grpc.secure_channel('stt.api.cloud.yandex.net:443', cred)
-        self._stub = stt_service_pb2_grpc.SttServiceStub(channel)
         #self._client = speech.SpeechClient.from_service_account_file(
-        #    filename=_GOOGLE_SPEECH_CREDS_FILENAME,
+            #filename=_GOOGLE_SPEECH_CREDS_FILENAME,
         #)
         self._queue = Queue()
         self._thread = Thread(target=self._transcribe)
@@ -74,15 +67,16 @@ class Transcriber:
     def _do_transcription(self, data):
         logging.debug('Sending %s to the speech API', len(data))
         #request = types.StreamingRecognizeRequest(audio_content=data)
-        output = '\n'
+        #output = '\n'
 
         #responses = self._client.streaming_recognize(self._streaming_config, [request])
-        responses = self._stub.stt_service_pb2.StreamingRecognitionRequest(audio_content=data)
-        for response in responses:
-            for result in response.results:
-                if not result.is_final:
-                    continue
-            output += '{}\n'.format(result.alternatives[0].transcript)
-
+        #for response in responses:
+        #    for result in response.results:
+        #        if not result.is_final:
+        #            continue
+        #    output += '{}\n'.format(result.alternatives[0].transcript)
+        with open("/tmp/test.raw","wb") as f:
+             f.write(data)
+        output = 'dummy output'
         logging.debug('final output: %s', output)
         return output
