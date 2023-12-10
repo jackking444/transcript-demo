@@ -20,8 +20,8 @@ import os
 ast_host = os.getenv("AST_HOST", 'localhost')
 ast_port = int(os.getenv("AST_ARI_PORT", 8088))
 ast_url = os.getenv("AST_URL", 'http://%s:%d/'%(ast_host,ast_port))
-ast_username = os.getenv("AST_USER", 'jack')
-ast_password = os.getenv("AST_PASS", '12345')
+ast_username = os.getenv("AST_USER", '')
+ast_password = os.getenv("AST_PASS", '')
 ast_app = os.getenv("AST_APP", 'hello')
 ast_outgoing = os.getenv("AST_OUTGOING", 'SIP/1001')
 ext_chan_media = ''
