@@ -9,8 +9,8 @@ import requests
 #from . import ARI_URL, ARI_USERNAME, ARI_PASSWORD, APPLICATION
 from transcription import Transcriber, MULAW
 ARI_URL = 'http://192.168.0.110:8088'
-ARI_USERNAME = 'jack'
-ARI_PASSWORD = '12345'
+ARI_USERNAME = ''
+ARI_PASSWORD = ''
 APPLICATION = 'hello'
 #logging.basicConfig(level=logging.DEBUG)
 logging.basicConfig()
